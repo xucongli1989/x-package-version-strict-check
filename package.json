@@ -1,0 +1,34 @@
+{
+  "name": "x-package-version-strict-check",
+  "version": "1.0.0",
+  "description": "A tool to strict check package's version in project.",
+  "main": "./dist/index.js",
+  "scripts": {
+    "start": "npm shrinkwrap --dev && ts-node index.ts",
+    "dist": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xucongli1989/x-package-version-strict-check.git"
+  },
+  "keywords": [
+    "node",
+    "package",
+    "version",
+    "check"
+  ],
+  "files": [
+    "dist"
+  ],
+  "author": "XCL",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/xucongli1989/x-package-version-strict-check/issues"
+  },
+  "homepage": "https://github.com/xucongli1989/x-package-version-strict-check#readme",
+  "devDependencies": {
+    "@types/node": "^10.12.18",
+    "ts-node": "^7.0.1",
+    "typescript": "^3.2.2"
+  }
+}
