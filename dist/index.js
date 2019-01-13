@@ -9,9 +9,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var fs = __importStar(require("fs"));
 var path = __importStar(require("path"));
-var packageJsonPath = path.resolve(__dirname, "package.json");
-var modulesPath = path.resolve(__dirname, "node_modules");
-var lockedVersionPath = path.resolve(__dirname, "npm-shrinkwrap.json");
+var packageJsonPath = path.resolve("./package.json");
+var modulesPath = path.resolve("./node_modules");
+var lockedVersionPath = path.resolve("./npm-shrinkwrap.json");
 var lockedVersionMap = {};
 var installedVersionMap = {};
 var packageJsonVersionMap = {};

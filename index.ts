@@ -5,9 +5,9 @@ interface VersionInfoType {
     [moduleName: string]: string[]
 }
 
-const packageJsonPath = path.resolve(__dirname, "package.json")
-const modulesPath = path.resolve(__dirname, "node_modules")
-const lockedVersionPath = path.resolve(__dirname, "npm-shrinkwrap.json")
+const packageJsonPath = path.resolve("./package.json")
+const modulesPath = path.resolve("./node_modules")
+const lockedVersionPath = path.resolve("./npm-shrinkwrap.json")
 const lockedVersionMap: VersionInfoType = {}
 const installedVersionMap: VersionInfoType = {}
 const packageJsonVersionMap: VersionInfoType = {}

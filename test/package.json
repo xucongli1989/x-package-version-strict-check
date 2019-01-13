@@ -4,8 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "check": "npm shrinkwrap --dev && node ./node_modules/x-package-version-strict-check"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "x-package-version-strict-check": "^1.0.0"
+  }
 }
