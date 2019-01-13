@@ -45,14 +45,15 @@ const unique = <T>(arr: T[]): T[] => {
     return newArr
 }
 if (!fs.existsSync(lockedVersionPath)) {
-    throw new Error("npm-shrinkwrap.json文件不存在！")
+    throw new Error("npm-shrinkwrap.json does not exist!")
 }
 if (!fs.existsSync(modulesPath)) {
-    throw new Error("node_modules文件夹不存在！")
+    throw new Error("node_modules folder does not exist!")
 }
 
 //package.json中的所有版本号
-console.log("开始分析package.json中的版本号......")
+console.log("")
+console.log("Start parsing the version number in package.json...")
 const packageJsonFileObj = JSON.parse(fs.readFileSync(packageJsonPath).toString()) as any
 [packageJsonFileObj.dependencies, packageJsonFileObj.devDependencies].forEach(obj => {
     if (!obj) return
@@ -65,11 +66,12 @@ const packageJsonFileObj = JSON.parse(fs.readFileSync(packageJsonPath).toString(
 })
 Object.keys(packageJsonVersionMap).forEach(k => {
     packageJsonVersionMap[k] = unique(packageJsonVersionMap[k])
-    console.log(`Package.json中的模块【${k}】，版本号：【${packageJsonVersionMap[k].toString()}】`)
+    console.log(`Package.json module [${k}]，version:[${packageJsonVersionMap[k].toString()}]`)
 })
 
 //锁定版本的文件
-console.log("\n开始分析锁定的版本文件......")
+console.log("")
+console.log("Start analyzing locked version files...")
 const lockedFileObj = JSON.parse(fs.readFileSync(lockedVersionPath).toString())
 const getVersionFromNode = (currentName: string, currentNode: any) => {
     if (!currentNode || !currentNode.version) {
@@ -91,11 +93,12 @@ Object.keys(lockedFileObj.dependencies).forEach(k => {
 })
 Object.keys(lockedVersionMap).forEach(k => {
     lockedVersionMap[k] = unique(lockedVersionMap[k])
-    console.log(`锁定【${k}】模块，版本号：【${lockedVersionMap[k].toString()}】`)
+    console.log(`Locked module [${k}],version:[${lockedVersionMap[k].toString()}]`)
 })
 
 //node_modules 文件夹中的所有版本号
-console.log("\n开始遍历node_modules文件夹......")
+console.log("")
+console.log("Start walking through the node_modules folder...")
 const getInstalledVersion = (currentFolderPath: string) => {
     let files: string[] = []
     try {
@@ -118,23 +121,24 @@ const getInstalledVersion = (currentFolderPath: string) => {
 getInstalledVersion(modulesPath)
 Object.keys(installedVersionMap).forEach(k => {
     installedVersionMap[k] = unique(installedVersionMap[k])
-    console.log(`已安装【${k}】模块，版本号：【${installedVersionMap[k].toString()}】`)
+    console.log(`Installed module [${k}],version:[${installedVersionMap[k].toString()}]`)
 })
 
 //开始比较
-console.log("\n开始比较版本号......")
+console.log("")
+console.log("Start compare versions......")
 Object.keys(lockedVersionMap).forEach(lockedKey => {
     if (!installedVersionMap[lockedKey]) {
-        throw new Error(`请检查模块【${lockedKey}】是否已安装！`)
+        throw new Error(`The module [${lockedKey}] does't  be installed!`)
     }
     const installedVersion = installedVersionMap[lockedKey].sort().toString()
     const lockedVersion = installedVersionMap[lockedKey].sort().toString()
     if (installedVersion !== lockedVersion) {
-        throw new Error(`模块【${lockedKey}】版本号不一致，锁定的版本为：${lockedVersion}，已安装的版本号为：${installedVersion}`)
+        throw new Error(`The module [${lockedKey}]'s version is different,locked version is:${lockedVersion},installed version is:${installedVersion}`)
     }
     const packageJsonVersion = (packageJsonVersionMap[lockedKey] || [])[0]
     if (packageJsonVersion && installedVersionMap[lockedKey].indexOf(packageJsonVersion) == -1) {
-        throw new Error(`Package.json文件中的模块【${lockedKey}】版本号不一致，已安装的版本为：${installedVersion}，package.json中的版本号为：${packageJsonVersion}`)
+        throw new Error(`In package.json,the module [${lockedKey}]'s versoin is different,installed version is:${installedVersion},package.json's version is:${packageJsonVersion}`)
     }
 })
-console.log("对比结束，所有模块版本号正常！")
+console.log("Modules's version compare is ok!")

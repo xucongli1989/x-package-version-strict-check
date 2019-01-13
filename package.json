@@ -1,7 +1,7 @@
 {
   "name": "x-package-version-strict-check",
   "version": "1.0.0",
-  "description": "A tool to strict check package's version in project.",
+  "description": "A tool to check package's version strictly in project.",
   "main": "./dist/index.js",
   "scripts": {
     "start": "npm shrinkwrap --dev && ts-node index.ts",
@@ -15,7 +15,9 @@
     "node",
     "package",
     "version",
-    "check"
+    "check",
+    "compare",
+    "version strict compare"
   ],
   "files": [
     "dist"
