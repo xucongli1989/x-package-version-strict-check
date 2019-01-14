@@ -138,6 +138,10 @@ Object.keys(packageJsonVersionMap).forEach(function (packageKey) {
         msgList.push("The module [" + packageKey + "] does't  be installed!");
         return;
     }
+    if (!lockedVersionMap[packageKey]) {
+        msgList.push("The module [" + packageKey + "] not in npm-shrinkwrap.json!");
+        return;
+    }
     var installedVersion = installedVersionMap[packageKey].sort().toString();
     var lockedVersion = lockedVersionMap[packageKey].sort().toString();
     if (installedVersion !== lockedVersion) {

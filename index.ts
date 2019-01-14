@@ -135,6 +135,10 @@ Object.keys(packageJsonVersionMap).forEach(packageKey => {
         msgList.push(`The module [${packageKey}] does't  be installed!`)
         return
     }
+    if (!lockedVersionMap[packageKey]) {
+        msgList.push(`The module [${packageKey}] not in npm-shrinkwrap.json!`)
+        return
+    }
     const installedVersion = installedVersionMap[packageKey].sort().toString()
     const lockedVersion = lockedVersionMap[packageKey].sort().toString()
     if (installedVersion !== lockedVersion) {
