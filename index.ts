@@ -5,6 +5,7 @@ interface VersionInfoType {
     [moduleName: string]: string[]
 }
 
+const semverReg = /\bv?(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-[\da-z-]+(?:\.[\da-z-]+)*)?(?:\+[\da-z-]+(?:\.[\da-z-]+)*)?\b/ig//https://github.com/sindresorhus/semver-regex
 const packageJsonPath = path.resolve("./package.json")
 const modulesPath = path.resolve("./node_modules")
 const lockedVersionPath = path.resolve("./npm-shrinkwrap.json")
@@ -13,22 +14,15 @@ const installedVersionMap: VersionInfoType = {}
 const packageJsonVersionMap: VersionInfoType = {}
 const getVersion = (str: string) => {
     if (!str) return ""
-    //10.0.2
-    if (/^(\d+\.)*\d+$/gi.test(str)) {
-        return str
+    const match = str.match(semverReg)
+    if (!match || !match.length) {
+        return ""
     }
-    let match = null
-    //"*****10.0.2"
-    match = str.match(/((\d+\.)+\d+)$/gi)
-    if (match && match.length) {
-        return match[0]
+    let ver = match[0]
+    if (ver.indexOf(".tgz") >= 0) {
+        ver = ver.substr(0, ver.length - 4)
     }
-    //"*****10.0.2.tgz"
-    match = str.match(/(\d+\.)+tgz$/gi)
-    if (match && match.length) {
-        return match[0].substr(0, match[0].length - 4)
-    }
-    return ""
+    return ver
 }
 const unique = <T>(arr: T[]): T[] => {
     if (!arr || arr.length <= 1) {
@@ -131,20 +125,20 @@ Object.keys(installedVersionMap).forEach(k => {
 const msgList: string[] = []
 console.log("")
 console.log("Start compare versions......")
-Object.keys(lockedVersionMap).forEach(lockedKey => {
-    if (!installedVersionMap[lockedKey]) {
-        msgList.push(`The module [${lockedKey}] does't  be installed!`)
+Object.keys(packageJsonVersionMap).forEach(packageKey => {
+    if (!installedVersionMap[packageKey]) {
+        msgList.push(`The module [${packageKey}] does't  be installed!`)
         return
     }
-    const installedVersion = installedVersionMap[lockedKey].sort().toString()
-    const lockedVersion = installedVersionMap[lockedKey].sort().toString()
+    const installedVersion = installedVersionMap[packageKey].sort().toString()
+    const lockedVersion = lockedVersionMap[packageKey].sort().toString()
     if (installedVersion !== lockedVersion) {
-        msgList.push(`The module [${lockedKey}]'s version is different,locked version is:${lockedVersion},installed version is:${installedVersion}`)
+        msgList.push(`The module [${packageKey}]'s version is different,locked version is:${lockedVersion},installed version is:${installedVersion}`)
         return
     }
-    const packageJsonVersion = (packageJsonVersionMap[lockedKey] || [])[0]
-    if (packageJsonVersion && installedVersionMap[lockedKey].indexOf(packageJsonVersion) == -1) {
-        msgList.push(`In package.json,the module [${lockedKey}]'s version is different,installed version is:${installedVersion},package.json's version is:${packageJsonVersion}`)
+    const packageJsonVersion = (packageJsonVersionMap[packageKey] || [])[0]
+    if (installedVersionMap[packageKey].indexOf(packageJsonVersion) == -1) {
+        msgList.push(`In package.json,the module [${packageKey}]'s version is different,installed version is:${installedVersion},package.json's version is:${packageJsonVersion}`)
         return
     }
 })

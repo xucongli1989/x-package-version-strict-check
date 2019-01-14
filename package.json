@@ -1,6 +1,6 @@
 {
   "name": "x-package-version-strict-check",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "A tool to check package's version strictly in project.",
   "main": "./dist/index.js",
   "scripts": {

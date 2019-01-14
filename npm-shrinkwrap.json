@@ -1,6 +1,6 @@
 {
   "name": "x-package-version-strict-check",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "lockfileVersion": 1,
   "requires": true,
   "dependencies": {
@@ -23,7 +23,7 @@
       "version": "http://registry.npm.taobao.org/make-error/download/make-error-1.3.5.tgz"
     },
     "minimist": {
-      "version": "http://registry.npm.taobao.org/minimist/download/minimist-1.2.0.tgz"
+      "version": "http://registry.npm.taobao.org/minimist/download/minimist-0.0.8.tgz"
     },
     "mkdirp": {
       "version": "http://registry.npm.taobao.org/mkdirp/download/mkdirp-0.5.1.tgz",
@@ -72,27 +72,27 @@
       "dependencies": {
         "arrify": {
           "version": "1.0.1",
-          "bundled": true
+          "resolved": "http://registry.npm.taobao.org/arrify/download/arrify-1.0.1.tgz"
         },
         "buffer-from": {
           "version": "1.1.1",
-          "bundled": true
+          "resolved": "http://registry.npm.taobao.org/buffer-from/download/buffer-from-1.1.1.tgz"
         },
         "diff": {
           "version": "3.5.0",
-          "bundled": true
+          "resolved": "http://registry.npm.taobao.org/diff/download/diff-3.5.0.tgz"
         },
         "make-error": {
           "version": "1.3.5",
-          "bundled": true
+          "resolved": "http://registry.npm.taobao.org/make-error/download/make-error-1.3.5.tgz"
         },
         "minimist": {
           "version": "1.2.0",
-          "bundled": true
+          "resolved": "http://registry.npm.taobao.org/minimist/download/minimist-1.2.0.tgz"
         },
         "mkdirp": {
           "version": "0.5.1",
-          "bundled": true,
+          "resolved": "http://registry.npm.taobao.org/mkdirp/download/mkdirp-0.5.1.tgz",
           "requires": {
             "minimist": "0.0.8"
           },
@@ -100,7 +100,7 @@
         },
         "source-map-support": {
           "version": "0.5.10",
-          "bundled": true,
+          "resolved": "http://registry.npm.taobao.org/source-map-support/download/source-map-support-0.5.10.tgz",
           "requires": {
             "buffer-from": "^1.0.0",
             "source-map": "^0.6.0"
@@ -109,7 +109,7 @@
         },
         "yn": {
           "version": "2.0.0",
-          "bundled": true
+          "resolved": "http://registry.npm.taobao.org/yn/download/yn-2.0.0.tgz"
         }
       }
     },
