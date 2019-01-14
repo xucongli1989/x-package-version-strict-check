@@ -13,14 +13,17 @@ const installedVersionMap: VersionInfoType = {}
 const packageJsonVersionMap: VersionInfoType = {}
 const getVersion = (str: string) => {
     if (!str) return ""
+    //10.0.2
     if (/^(\d+\.)*\d+$/gi.test(str)) {
         return str
     }
     let match = null
+    //"*****10.0.2"
     match = str.match(/((\d+\.)+\d+)$/gi)
     if (match && match.length) {
         return match[0]
     }
+    //"*****10.0.2.tgz"
     match = str.match(/(\d+\.)+tgz$/gi)
     if (match && match.length) {
         return match[0].substr(0, match[0].length - 4)
@@ -125,20 +128,32 @@ Object.keys(installedVersionMap).forEach(k => {
 })
 
 //开始比较
+const msgList: string[] = []
 console.log("")
 console.log("Start compare versions......")
 Object.keys(lockedVersionMap).forEach(lockedKey => {
     if (!installedVersionMap[lockedKey]) {
-        throw new Error(`The module [${lockedKey}] does't  be installed!`)
+        msgList.push(`The module [${lockedKey}] does't  be installed!`)
+        return
     }
     const installedVersion = installedVersionMap[lockedKey].sort().toString()
     const lockedVersion = installedVersionMap[lockedKey].sort().toString()
     if (installedVersion !== lockedVersion) {
-        throw new Error(`The module [${lockedKey}]'s version is different,locked version is:${lockedVersion},installed version is:${installedVersion}`)
+        msgList.push(`The module [${lockedKey}]'s version is different,locked version is:${lockedVersion},installed version is:${installedVersion}`)
+        return
     }
     const packageJsonVersion = (packageJsonVersionMap[lockedKey] || [])[0]
     if (packageJsonVersion && installedVersionMap[lockedKey].indexOf(packageJsonVersion) == -1) {
-        throw new Error(`In package.json,the module [${lockedKey}]'s versoin is different,installed version is:${installedVersion},package.json's version is:${packageJsonVersion}`)
+        msgList.push(`In package.json,the module [${lockedKey}]'s version is different,installed version is:${installedVersion},package.json's version is:${packageJsonVersion}`)
+        return
     }
 })
-console.log("Modules's version compare is ok!")
+if (msgList.length) {
+    console.log("\u001b[1;31m")
+    msgList.forEach(k => {
+        console.error(k)
+    })
+} else {
+    console.log("\u001b[1;32m")
+    console.log("Modules's version compare is ok!")
+}
