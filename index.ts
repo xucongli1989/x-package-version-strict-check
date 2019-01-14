@@ -5,6 +5,7 @@ interface VersionInfoType {
     [moduleName: string]: string[]
 }
 
+const invalidModulesNameReg = /@.+@/
 const semverReg = /\bv?(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-[\da-z-]+(?:\.[\da-z-]+)*)?(?:\+[\da-z-]+(?:\.[\da-z-]+)*)?\b/ig//https://github.com/sindresorhus/semver-regex
 const packageJsonPath = path.resolve("./package.json")
 const modulesPath = path.resolve("./node_modules")
@@ -102,6 +103,10 @@ const getInstalledVersion = (currentFolderPath: string) => {
         files = fs.readdirSync(currentFolderPath)
     } catch{ }
     files.forEach((folder) => {
+        if (invalidModulesNameReg.test(folder)) {
+            //不统计子版本
+            return
+        }
         const packagePath = path.resolve(currentFolderPath, `${folder}/package.json`)
         if (!fs.existsSync(packagePath)) {
             getInstalledVersion(path.resolve(currentFolderPath, folder))
@@ -145,7 +150,7 @@ Object.keys(packageJsonVersionMap).forEach(packageKey => {
 if (msgList.length) {
     console.log("\u001b[1;31m")
     msgList.forEach(k => {
-        console.error(k)
+        console.log(k)
     })
 } else {
     console.log("\u001b[1;32m")

@@ -9,6 +9,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var fs = __importStar(require("fs"));
 var path = __importStar(require("path"));
+var invalidModulesNameReg = /@.+@/;
 var semverReg = /\bv?(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-[\da-z-]+(?:\.[\da-z-]+)*)?(?:\+[\da-z-]+(?:\.[\da-z-]+)*)?\b/ig; //https://github.com/sindresorhus/semver-regex
 var packageJsonPath = path.resolve("./package.json");
 var modulesPath = path.resolve("./node_modules");
@@ -106,6 +107,10 @@ var getInstalledVersion = function (currentFolderPath) {
     }
     catch (_a) { }
     files.forEach(function (folder) {
+        if (invalidModulesNameReg.test(folder)) {
+            //不统计子版本
+            return;
+        }
         var packagePath = path.resolve(currentFolderPath, folder + "/package.json");
         if (!fs.existsSync(packagePath)) {
             getInstalledVersion(path.resolve(currentFolderPath, folder));
@@ -148,7 +153,7 @@ Object.keys(packageJsonVersionMap).forEach(function (packageKey) {
 if (msgList.length) {
     console.log("\u001b[1;31m");
     msgList.forEach(function (k) {
-        console.error(k);
+        console.log(k);
     });
 }
 else {
