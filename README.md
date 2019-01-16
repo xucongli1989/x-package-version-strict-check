@@ -4,9 +4,9 @@ This is a tool to check package's version strictly in project.We often encounter
 
 # Theory
 
-Just check the following files in the package version number is exactly the same (do not include the fuzzy versions of the characters, such as `^`) :
+Just check the following files in the package version number is exactly the same (ignore fuzzy versions of the characters, such as `^`) :
 - node_modules
-- npm-shrinkwrap.json
+- npm-shrinkwrap.json(`npm shrinkwrap --dev`)
 - package.json
 
 # Usage
@@ -16,7 +16,7 @@ Just check the following files in the package version number is exactly the same
 
 ```javascript
   "scripts": {
-    "check": "npm shrinkwrap --dev && node ./node_modules/x-package-version-strict-check"
+    "check": "node ./node_modules/x-package-version-strict-check"
   }
 ```
 

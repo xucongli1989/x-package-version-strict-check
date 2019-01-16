@@ -67,7 +67,7 @@ const getJsonObjectFromFilePath = (filePath: string) => {
         }
         if (currentNode.dependencies) {
             Object.keys(currentNode.dependencies).forEach(k => {
-                checkLockedVersion(path.resolve(rootNodeModulesPath, `${currentName}/node_modules`), k, currentNode.dependencies[k])
+                checkLockedVersion(path.resolve(currentNodePath, `node_modules`), k, currentNode.dependencies[k])
             })
         }
     }
@@ -91,7 +91,7 @@ const getJsonObjectFromFilePath = (filePath: string) => {
                 msgList.push(`${mpath} does not found!`)
             }
             if (installedObj.version !== verInPackageJson) {
-                msgList.push(`Module [${k}]'s version is different with [${mpath}]!`)
+                msgList.push(`Module [${k}]: project package.json version(${verInPackageJson}) is different with installed(${installedObj.version})!`)
             }
         })
     })

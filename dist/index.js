@@ -69,12 +69,12 @@ var getJsonObjectFromFilePath = function (filePath) {
             return;
         }
         if (currentNodePackageJson.version !== ver) {
-            msgList.push("Module [" + currentName + "]: npm-shrinkwrap.json's version(" + ver + ") is different with installed(" + currentNodePackageJson.version + ")!");
+            msgList.push("Module [" + currentName + "]: npm-shrinkwrap.json's version(" + ver + ") is different with installed(" + currentNodePackageJson.version + ")! (Check path:" + currentPackageJsonPath + ")");
             return;
         }
         if (currentNode.dependencies) {
             Object.keys(currentNode.dependencies).forEach(function (k) {
-                checkLockedVersion(path.resolve(rootNodeModulesPath, currentName + "/node_modules"), k, currentNode.dependencies[k]);
+                checkLockedVersion(path.resolve(currentNodePath, "node_modules"), k, currentNode.dependencies[k]);
             });
         }
     };
@@ -98,7 +98,7 @@ var getJsonObjectFromFilePath = function (filePath) {
                 msgList.push(mpath + " does not found!");
             }
             if (installedObj.version !== verInPackageJson) {
-                msgList.push("Module [" + k + "]'s version is different with [" + mpath + "]!");
+                msgList.push("Module [" + k + "]: project package.json version(" + verInPackageJson + ") is different with installed(" + installedObj.version + ")!");
             }
         });
     });
