@@ -53,37 +53,37 @@ var getJsonObjectFromFilePath = function (filePath) {
         msgList.push("Project's package.json name or version field is different with package-lock.json,please check it!");
         return;
     }
-    //检查锁定版本的文件中的包是否已全部正确安装
-    console.log("");
-    console.log("Start check package-lock.json's versions in current project's node_modules folder......");
-    var checkLockedVersion = function (rootNodeModulesPath, currentName, currentNode) {
-        if (!currentNode || !currentNode.version) {
-            return;
-        }
-        var ver = getVersion(currentNode.version);
-        var currentNodePath = path.resolve(rootNodeModulesPath, currentName);
-        var currentPackageJsonPath = path.resolve(currentNodePath, "package.json");
-        var currentNodePackageJson = getJsonObjectFromFilePath(currentPackageJsonPath);
-        if (!currentNodePackageJson) {
-            msgList.push(currentPackageJsonPath + " not found!");
-            return;
-        }
-        if (currentNodePackageJson.version !== ver) {
-            msgList.push("Module [" + currentName + "]: package-lock.json's version(" + ver + ") is different with installed(" + currentNodePackageJson.version + ")! (Check path:" + currentPackageJsonPath + ")");
-            return;
-        }
-        if (currentNode.dependencies) {
-            Object.keys(currentNode.dependencies).forEach(function (k) {
-                checkLockedVersion(path.resolve(currentNodePath, "node_modules"), k, currentNode.dependencies[k]);
-            });
-        }
-    };
-    Object.keys(lockedFileObj.dependencies).forEach(function (k) {
-        checkLockedVersion(modulesPath, k, lockedFileObj.dependencies[k]);
-    });
-    if (msgList.length) {
-        return;
-    }
+    // //检查锁定版本的文件中的包是否已全部正确安装
+    // console.log("")
+    // console.log("Start check package-lock.json's versions in current project's node_modules folder......")
+    // const checkLockedVersion = (rootNodeModulesPath: string, currentName: string, currentNode: any) => {
+    //     if (!currentNode || !currentNode.version) {
+    //         return
+    //     }
+    //     const ver = getVersion(currentNode.version)
+    //     const currentNodePath = path.resolve(rootNodeModulesPath, currentName)
+    //     const currentPackageJsonPath = path.resolve(currentNodePath, "package.json")
+    //     const currentNodePackageJson = getJsonObjectFromFilePath(currentPackageJsonPath)
+    //     if (!currentNodePackageJson) {
+    //         msgList.push(`${currentPackageJsonPath} not found!`)
+    //         return
+    //     }
+    //     if (currentNodePackageJson.version !== ver) {
+    //         msgList.push(`Module [${currentName}]: package-lock.json's version(${ver}) is different with installed(${currentNodePackageJson.version})! (Check path:${currentPackageJsonPath})`)
+    //         return
+    //     }
+    //     if (currentNode.dependencies) {
+    //         Object.keys(currentNode.dependencies).forEach(k => {
+    //             checkLockedVersion(path.resolve(currentNodePath, `node_modules`), k, currentNode.dependencies[k])
+    //         })
+    //     }
+    // }
+    // Object.keys(lockedFileObj.dependencies).forEach(k => {
+    //     checkLockedVersion(modulesPath, k, lockedFileObj.dependencies[k])
+    // })
+    // if (msgList.length) {
+    //     return
+    // }
     //检查package.json中的包是否已全部正确安装
     console.log("");
     console.log("Start check the version number in package.json...");
@@ -92,13 +92,26 @@ var getJsonObjectFromFilePath = function (filePath) {
             return;
         Object.keys(obj).forEach(function (k) {
             var verInPackageJson = getVersion(obj[k]);
+            //检查package.json中的依赖包是否与package-lock.json一致
+            if (!lockedFileObj.dependencies || !lockedFileObj.dependencies[k]) {
+                msgList.push("Moudle " + k + " is not in package-lock.json!");
+                return;
+            }
+            var lockedVer = getVersion(lockedFileObj.dependencies[k].version);
+            if (lockedVer !== verInPackageJson) {
+                msgList.push("Moudle " + k + ": package.json's version(" + verInPackageJson + ") is different with package-lock.json version(" + lockedVer + ")!");
+                return;
+            }
+            //检查是否已正确安装
             var mpath = path.resolve(modulesPath, k + "/package.json");
             var installedObj = getJsonObjectFromFilePath(mpath);
             if (!installedObj) {
                 msgList.push(mpath + " does not found!");
+                return;
             }
             if (installedObj.version !== verInPackageJson) {
                 msgList.push("Module [" + k + "]: project package.json version(" + verInPackageJson + ") is different with installed(" + installedObj.version + ")!");
+                return;
             }
         });
     });

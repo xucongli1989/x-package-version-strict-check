@@ -6,7 +6,7 @@ This is a tool to check package's version strictly in project.We often encounter
 
 Just check the following files in the package version number is exactly the same (ignore fuzzy versions of the characters, such as `^`) :
 - node_modules
-- npm-shrinkwrap.json(`npm shrinkwrap --dev`)
+- package-lock.json
 - package.json
 
 # Usage
