@@ -12,7 +12,7 @@ var path = __importStar(require("path"));
 var semverReg = /\bv?(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-[\da-z-]+(?:\.[\da-z-]+)*)?(?:\+[\da-z-]+(?:\.[\da-z-]+)*)?\b/ig; //https://github.com/sindresorhus/semver-regex
 var packageJsonPath = path.resolve("./package.json");
 var modulesPath = path.resolve("./node_modules");
-var lockedVersionPath = path.resolve("./npm-shrinkwrap.json");
+var lockedVersionPath = path.resolve("./package-lock.json");
 var msgList = [];
 var getVersion = function (str) {
     if (!str)
@@ -41,21 +41,21 @@ var getJsonObjectFromFilePath = function (filePath) {
     var lockedFileObj = getJsonObjectFromFilePath(lockedVersionPath);
     var packageJsonFileObj = getJsonObjectFromFilePath(packageJsonPath);
     if (!lockedFileObj) {
-        msgList.push("npm-shrinkwrap.json does not exist!");
+        msgList.push("package-lock.json does not exist!");
         return;
     }
     if (!packageJsonFileObj) {
         msgList.push("node_modules folder does not exist!");
         return;
     }
-    //检查package.json与npm-shrinkwrap.json的名称和版本号是否一致
+    //检查package.json与package-lock.json的名称和版本号是否一致
     if (lockedFileObj.name !== packageJsonFileObj.name || lockedFileObj.version !== packageJsonFileObj.version) {
-        msgList.push("Project's package.json name or version field is different with npm-shrinkwrap.json,please check it!");
+        msgList.push("Project's package.json name or version field is different with package-lock.json,please check it!");
         return;
     }
     //检查锁定版本的文件中的包是否已全部正确安装
     console.log("");
-    console.log("Start check npm-shrinkwrap.json's versions in current project's node_modules folder......");
+    console.log("Start check package-lock.json's versions in current project's node_modules folder......");
     var checkLockedVersion = function (rootNodeModulesPath, currentName, currentNode) {
         if (!currentNode || !currentNode.version) {
             return;
@@ -69,7 +69,7 @@ var getJsonObjectFromFilePath = function (filePath) {
             return;
         }
         if (currentNodePackageJson.version !== ver) {
-            msgList.push("Module [" + currentName + "]: npm-shrinkwrap.json's version(" + ver + ") is different with installed(" + currentNodePackageJson.version + ")! (Check path:" + currentPackageJsonPath + ")");
+            msgList.push("Module [" + currentName + "]: package-lock.json's version(" + ver + ") is different with installed(" + currentNodePackageJson.version + ")! (Check path:" + currentPackageJsonPath + ")");
             return;
         }
         if (currentNode.dependencies) {

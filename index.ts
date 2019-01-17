@@ -4,7 +4,7 @@ import * as  path from "path"
 const semverReg = /\bv?(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-[\da-z-]+(?:\.[\da-z-]+)*)?(?:\+[\da-z-]+(?:\.[\da-z-]+)*)?\b/ig//https://github.com/sindresorhus/semver-regex
 const packageJsonPath = path.resolve("./package.json")
 const modulesPath = path.resolve("./node_modules")
-const lockedVersionPath = path.resolve("./npm-shrinkwrap.json")
+const lockedVersionPath = path.resolve("./package-lock.json")
 const msgList: string[] = []
 const getVersion = (str: string) => {
     if (!str) return ""
@@ -32,7 +32,7 @@ const getJsonObjectFromFilePath = (filePath: string) => {
     const lockedFileObj = getJsonObjectFromFilePath(lockedVersionPath)
     const packageJsonFileObj = getJsonObjectFromFilePath(packageJsonPath)
     if (!lockedFileObj) {
-        msgList.push("npm-shrinkwrap.json does not exist!")
+        msgList.push("package-lock.json does not exist!")
         return
     }
     if (!packageJsonFileObj) {
@@ -40,15 +40,15 @@ const getJsonObjectFromFilePath = (filePath: string) => {
         return
     }
 
-    //检查package.json与npm-shrinkwrap.json的名称和版本号是否一致
+    //检查package.json与package-lock.json的名称和版本号是否一致
     if (lockedFileObj.name !== packageJsonFileObj.name || lockedFileObj.version !== packageJsonFileObj.version) {
-        msgList.push("Project's package.json name or version field is different with npm-shrinkwrap.json,please check it!")
+        msgList.push("Project's package.json name or version field is different with package-lock.json,please check it!")
         return
     }
 
     //检查锁定版本的文件中的包是否已全部正确安装
     console.log("")
-    console.log("Start check npm-shrinkwrap.json's versions in current project's node_modules folder......")
+    console.log("Start check package-lock.json's versions in current project's node_modules folder......")
     const checkLockedVersion = (rootNodeModulesPath: string, currentName: string, currentNode: any) => {
         if (!currentNode || !currentNode.version) {
             return
@@ -62,7 +62,7 @@ const getJsonObjectFromFilePath = (filePath: string) => {
             return
         }
         if (currentNodePackageJson.version !== ver) {
-            msgList.push(`Module [${currentName}]: npm-shrinkwrap.json's version(${ver}) is different with installed(${currentNodePackageJson.version})! (Check path:${currentPackageJsonPath})`)
+            msgList.push(`Module [${currentName}]: package-lock.json's version(${ver}) is different with installed(${currentNodePackageJson.version})! (Check path:${currentPackageJsonPath})`)
             return
         }
         if (currentNode.dependencies) {

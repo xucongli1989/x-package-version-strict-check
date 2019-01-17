@@ -1,11 +1,11 @@
 {
   "name": "x-package-version-strict-check",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "A tool to check package's version strictly in project.",
   "main": "./dist/index.js",
   "scripts": {
     "start": "ts-node index.ts",
-    "dist": "npm shrinkwrap --dev && tsc"
+    "dist": "tsc"
   },
   "repository": {
     "type": "git",
