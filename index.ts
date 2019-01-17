@@ -115,6 +115,7 @@ if (msgList.length) {
     msgList.forEach(k => {
         console.log(k)
     })
+    throw new Error("Please check your package's version!")
 } else {
     console.log("\u001b[1;32m")
     console.log("Modules's version compare is ok!")
