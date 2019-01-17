@@ -121,7 +121,7 @@ if (msgList.length) {
     msgList.forEach(function (k) {
         console.log(k);
     });
-    throw new Error("Please check your package's version!");
+    process.exit(1);
 }
 else {
     console.log("\u001b[1;32m");
