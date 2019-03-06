@@ -40,47 +40,25 @@ const getJsonObjectFromFilePath = (filePath: string) => {
         return
     }
 
+    packageJsonFileObj.dependencies = packageJsonFileObj.dependencies || {}
+    packageJsonFileObj.devDependencies = packageJsonFileObj.devDependencies || {}
+
     //检查package.json与package-lock.json的名称和版本号是否一致
     if (lockedFileObj.name !== packageJsonFileObj.name || lockedFileObj.version !== packageJsonFileObj.version) {
         msgList.push("Project's package.json name or version field is different with package-lock.json,please check it!")
         return
     }
 
-    // //检查锁定版本的文件中的包是否已全部正确安装
-    // console.log("")
-    // console.log("Start check package-lock.json's versions in current project's node_modules folder......")
-    // const checkLockedVersion = (rootNodeModulesPath: string, currentName: string, currentNode: any) => {
-    //     if (!currentNode || !currentNode.version) {
-    //         return
-    //     }
-    //     const ver = getVersion(currentNode.version)
-    //     const currentNodePath = path.resolve(rootNodeModulesPath, currentName)
-    //     const currentPackageJsonPath = path.resolve(currentNodePath, "package.json")
-    //     const currentNodePackageJson = getJsonObjectFromFilePath(currentPackageJsonPath)
-    //     if (!currentNodePackageJson) {
-    //         msgList.push(`${currentPackageJsonPath} not found!`)
-    //         return
-    //     }
-    //     if (currentNodePackageJson.version !== ver) {
-    //         msgList.push(`Module [${currentName}]: package-lock.json's version(${ver}) is different with installed(${currentNodePackageJson.version})! (Check path:${currentPackageJsonPath})`)
-    //         return
-    //     }
-    //     if (currentNode.dependencies) {
-    //         Object.keys(currentNode.dependencies).forEach(k => {
-    //             checkLockedVersion(path.resolve(currentNodePath, `node_modules`), k, currentNode.dependencies[k])
-    //         })
-    //     }
-    // }
-    // Object.keys(lockedFileObj.dependencies).forEach(k => {
-    //     checkLockedVersion(modulesPath, k, lockedFileObj.dependencies[k])
-    // })
-    // if (msgList.length) {
-    //     return
-    // }
+    //检查dependencies与devDependencies是否有重复的节点
+    Object.keys(packageJsonFileObj.dependencies).forEach(k => {
+        if (typeof (packageJsonFileObj.devDependencies[k]) != 'undefined') {
+            msgList.push(`Module ${k} exists in both dependencies and devDependencies!`);
+        }
+    });
 
     //检查package.json中的包是否已全部正确安装
     console.log("")
-    console.log("Start check the version number in package.json...");
+    console.log("Start checking the version number in package.json...");
     [packageJsonFileObj.dependencies, packageJsonFileObj.devDependencies].forEach(obj => {
         if (!obj) return
         Object.keys(obj).forEach(k => {
@@ -115,8 +93,12 @@ if (msgList.length) {
     msgList.forEach(k => {
         console.log(k)
     })
+    console.log("\x1b[0m");
     process.exit(1)
 } else {
     console.log("\u001b[1;32m")
-    console.log("Modules's version compare is ok!")
+    console.log("=======================^_^=========^_^==========^_^===============================")
+    console.log("x-package-version-strict-check: Module version matching completed, everything is ok!")
+    console.log("=======================^_^=========^_^==========^_^===============================")
+    console.log("\x1b[0m");
 }
