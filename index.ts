@@ -52,7 +52,7 @@ const getJsonObjectFromFilePath = (filePath: string) => {
     //检查dependencies与devDependencies是否有重复的节点
     Object.keys(packageJsonFileObj.dependencies).forEach(k => {
         if (typeof (packageJsonFileObj.devDependencies[k]) != 'undefined') {
-            msgList.push(`Module ${k} exists in both dependencies and devDependencies!`);
+            msgList.push(`Module ${k} exists in both dependencies and devDependencies,please remove one of it!`);
         }
     });
 
@@ -65,23 +65,23 @@ const getJsonObjectFromFilePath = (filePath: string) => {
             const verInPackageJson = getVersion(obj[k])
             //检查package.json中的依赖包是否与package-lock.json一致
             if (!lockedFileObj.dependencies || !lockedFileObj.dependencies[k]) {
-                msgList.push(`Moudle ${k} is not in package-lock.json!`)
+                msgList.push(`Moudle ${k} is not in package-lock.json,please try run npm i !`)
                 return
             }
             const lockedVer = getVersion(lockedFileObj.dependencies[k].version)
             if (lockedVer !== verInPackageJson) {
-                msgList.push(`Moudle ${k}: package.json's version(${verInPackageJson}) is different with package-lock.json version(${lockedVer})!`)
+                msgList.push(`Moudle ${k}: package.json's version(${verInPackageJson}) is different with package-lock.json version(${lockedVer}),please check it!`)
                 return
             }
             //检查是否已正确安装
             let mpath = path.resolve(modulesPath, `${k}/package.json`)
             let installedObj = getJsonObjectFromFilePath(mpath)
             if (!installedObj) {
-                msgList.push(`${mpath} does not found!`)
+                msgList.push(`${mpath} does not found,please check it!`)
                 return
             }
             if (installedObj.version !== verInPackageJson) {
-                msgList.push(`Module [${k}]: project package.json version(${verInPackageJson}) is different with installed(${installedObj.version})!`)
+                msgList.push(`Module [${k}]: project package.json version(${verInPackageJson}) is different with installed(${installedObj.version}),please try run npm i !`)
                 return
             }
         })

@@ -11,13 +11,23 @@ Just check the following files in the package version number is exactly the same
 
 # Usage
 
-- npm install --save-dev x-package-version-strict-check
-- Add script in package.json
+- `npm install --save-dev x-package-version-strict-check`
+- Add script in **package.json**
 
 ```javascript
   "scripts": {
-    "check": "node ./node_modules/x-package-version-strict-check"
+    "check": "x-package-version-strict-check"
   }
 ```
 
-- npm run check
+- `npm run check`,if have some error,you will see them like this:
+
+```bash
+> x-package-version-strict-check
+Please wait while checking the version information......
+Start checking the version number in package.json...
+Moudle jquery: package.json's version(1.3.1) is different with package-lock.json version(3.3.1)!
+Moudle x-package-version-strict-check: package.json's version(1.5.0) is different with package-lock.json version(1.5.1)!
+npm ERR! Test failed.  See above for more details.
+```
+
