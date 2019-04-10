@@ -6,26 +6,22 @@ var __importStar = (this && this.__importStar) || function (mod) {
     result["default"] = mod;
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var fs = __importStar(require("fs"));
 var path = __importStar(require("path"));
-var semverReg = /\bv?(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-[\da-z-]+(?:\.[\da-z-]+)*)?(?:\+[\da-z-]+(?:\.[\da-z-]+)*)?\b/ig; //https://github.com/sindresorhus/semver-regex
+var semver_1 = __importDefault(require("semver"));
 var packageJsonPath = path.resolve("./package.json");
 var modulesPath = path.resolve("./node_modules");
 var lockedVersionPath = path.resolve("./package-lock.json");
 var msgList = [];
 var getVersion = function (str) {
-    if (!str)
-        return "";
-    var match = str.match(semverReg);
-    if (!match || !match.length) {
+    if (!semver_1.default.valid(str)) {
         return "";
     }
-    var ver = match[0];
-    if (ver.indexOf(".tgz") >= 0) {
-        ver = ver.substr(0, ver.length - 4);
-    }
-    return ver;
+    return str;
 };
 var getJsonObjectFromFilePath = function (filePath) {
     try {
@@ -50,6 +46,13 @@ var getJsonObjectFromFilePath = function (filePath) {
     }
     packageJsonFileObj.dependencies = packageJsonFileObj.dependencies || {};
     packageJsonFileObj.devDependencies = packageJsonFileObj.devDependencies || {};
+    //检查node环境
+    if (packageJsonFileObj.engines) {
+        if (packageJsonFileObj.engines.node && !semver_1.default.satisfies(process.versions.node, packageJsonFileObj.engines.node)) {
+            msgList.push("The node version that the current project depends on is : [" + packageJsonFileObj.engines.node + "] ,but you installed version is [" + process.versions.node + "] ,please check it!");
+            return;
+        }
+    }
     //检查package.json与package-lock.json的名称和版本号是否一致
     if (lockedFileObj.name !== packageJsonFileObj.name || lockedFileObj.version !== packageJsonFileObj.version) {
         msgList.push("Project's package.json name or version field is different with package-lock.json,please check it!");

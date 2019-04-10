@@ -1,22 +1,16 @@
 import * as fs from "fs"
 import * as  path from "path"
+import semver from "semver"
 
-const semverReg = /\bv?(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-[\da-z-]+(?:\.[\da-z-]+)*)?(?:\+[\da-z-]+(?:\.[\da-z-]+)*)?\b/ig//https://github.com/sindresorhus/semver-regex
 const packageJsonPath = path.resolve("./package.json")
 const modulesPath = path.resolve("./node_modules")
 const lockedVersionPath = path.resolve("./package-lock.json")
 const msgList: string[] = []
 const getVersion = (str: string) => {
-    if (!str) return ""
-    const match = str.match(semverReg)
-    if (!match || !match.length) {
+    if (!semver.valid(str)) {
         return ""
     }
-    let ver = match[0]
-    if (ver.indexOf(".tgz") >= 0) {
-        ver = ver.substr(0, ver.length - 4)
-    }
-    return ver
+    return str
 }
 const getJsonObjectFromFilePath = (filePath: string) => {
     try {
@@ -42,6 +36,14 @@ const getJsonObjectFromFilePath = (filePath: string) => {
 
     packageJsonFileObj.dependencies = packageJsonFileObj.dependencies || {}
     packageJsonFileObj.devDependencies = packageJsonFileObj.devDependencies || {}
+
+    //检查node环境
+    if (packageJsonFileObj.engines) {
+        if (packageJsonFileObj.engines.node && !semver.satisfies(process.versions.node, packageJsonFileObj.engines.node)) {
+            msgList.push(`The node version that the current project depends on is : [${packageJsonFileObj.engines.node}] ,but you installed version is [${process.versions.node}] ,please check it!`)
+            return
+        }
+    }
 
     //检查package.json与package-lock.json的名称和版本号是否一致
     if (lockedFileObj.name !== packageJsonFileObj.name || lockedFileObj.version !== packageJsonFileObj.version) {

@@ -4,13 +4,13 @@ This is a tool to check package's version strictly in project.We often encounter
 
 # Theory
 
-Just check the following files in the package version number is exactly the same (ignore fuzzy versions of the characters, such as `^`) :
-- node_modules
-- package-lock.json
-- package.json
+- Check the following files in the package version number is exactly the same :`./node_modules` , `./package-lock.json` , `./package.json`
+- Check the Node.js version with  installed if you set version in package.json via `engines.node`
 
 # Usage
 
+- Remove  fuzzy versions of the characters in package.json , such as `^`
+- Add Node.js version in package.json if you want
 - `npm install --save-dev x-package-version-strict-check`
 - Add script in **package.json**
 
@@ -20,7 +20,7 @@ Just check the following files in the package version number is exactly the same
   }
 ```
 
-- `npm run check`,if have some error,you will see them like this:
+- `npm run check`, if have some error, you will see them like this:
 
 ```bash
 > x-package-version-strict-check
@@ -30,4 +30,3 @@ Moudle jquery: package.json's version(1.3.1) is different with package-lock.json
 Moudle x-package-version-strict-check: package.json's version(1.5.0) is different with package-lock.json version(1.5.1)!
 npm ERR! Test failed.  See above for more details.
 ```
-
