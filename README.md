@@ -26,7 +26,7 @@ This is a tool to check package's version strictly in project.We often encounter
 > x-package-version-strict-check
 Please wait while checking the version information......
 Start checking the version number in package.json...
-Moudle jquery: package.json's version(1.3.1) is different with package-lock.json version(3.3.1)!
-Moudle x-package-version-strict-check: package.json's version(1.5.0) is different with package-lock.json version(1.5.1)!
+Module jquery: package.json's version(1.3.1) is different with package-lock.json version(3.3.1)!
+Module x-package-version-strict-check: package.json's version(1.5.0) is different with package-lock.json version(1.5.1)!
 npm ERR! Test failed.  See above for more details.
 ```
