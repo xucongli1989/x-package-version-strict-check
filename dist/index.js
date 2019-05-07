@@ -61,7 +61,7 @@ var getJsonObjectFromFilePath = function (filePath) {
     //检查dependencies与devDependencies是否有重复的节点
     Object.keys(packageJsonFileObj.dependencies).forEach(function (k) {
         if (typeof (packageJsonFileObj.devDependencies[k]) != 'undefined') {
-            msgList.push("Module " + k + " exists in both dependencies and devDependencies,please remove one of it!");
+            msgList.push("Module [" + k + "] exists in both dependencies and devDependencies,please remove one of it!");
         }
     });
     //检查package.json中的包是否已全部正确安装
@@ -72,14 +72,19 @@ var getJsonObjectFromFilePath = function (filePath) {
             return;
         Object.keys(obj).forEach(function (k) {
             var verInPackageJson = getVersion(obj[k]);
+            //检查package.json中的版本号是否符合规范
+            if (!verInPackageJson) {
+                msgList.push("Module [" + k + "]'s version in package.json is invalid, please check it!");
+                return;
+            }
             //检查package.json中的依赖包是否与package-lock.json一致
             if (!lockedFileObj.dependencies || !lockedFileObj.dependencies[k]) {
-                msgList.push("Moudle " + k + " is not in package-lock.json,please try run npm i !");
+                msgList.push("Module [" + k + "] is not in package-lock.json,please try run npm i !");
                 return;
             }
             var lockedVer = getVersion(lockedFileObj.dependencies[k].version);
             if (lockedVer !== verInPackageJson) {
-                msgList.push("Moudle " + k + ": package.json's version(" + verInPackageJson + ") is different with package-lock.json version(" + lockedVer + "),please check it!");
+                msgList.push("Module [" + k + "]: package.json's version(" + verInPackageJson + ") is different with package-lock.json version(" + lockedVer + "),please check it!");
                 return;
             }
             //检查是否已正确安装
