@@ -1,10 +1,24 @@
 import * as fs from "fs"
 import * as  path from "path"
 import semver from "semver"
+import commander from "commander"
 
-const packageJsonPath = path.resolve("./package.json")
-const modulesPath = path.resolve("./node_modules")
-const lockedVersionPath = path.resolve("./package-lock.json")
+//通过命令行获取项目根路径（默认为当前项目）
+commander.option('--path [path]', 'your project path.').parse(process.argv)
+let projectRootPath = "./"
+if (commander.path) {
+    projectRootPath = path.resolve(commander.path)
+}
+if (!fs.existsSync(projectRootPath)) {
+    console.log("\u001b[1;31m")
+    console.log(`Project path【${projectRootPath}】does not exist!`)
+    console.log("\x1b[0m");
+    process.exit(1)
+}
+
+const packageJsonPath = path.resolve(projectRootPath, "package.json")
+const modulesPath = path.resolve(projectRootPath, "node_modules")
+const lockedVersionPath = path.resolve(projectRootPath, "package-lock.json")
 const msgList: string[] = []
 const getVersion = (str: string) => {
     if (!semver.valid(str)) {

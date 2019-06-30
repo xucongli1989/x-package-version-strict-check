@@ -30,3 +30,8 @@ Module jquery: package.json's version(1.3.1) is different with package-lock.json
 Module x-package-version-strict-check: package.json's version(1.5.0) is different with package-lock.json version(1.5.1)!
 npm ERR! Test failed.  See above for more details.
 ```
+
+# CLI
+
+- `--path`: Specify the project root path which you want to check.
+

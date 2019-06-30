@@ -13,9 +13,22 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var fs = __importStar(require("fs"));
 var path = __importStar(require("path"));
 var semver_1 = __importDefault(require("semver"));
-var packageJsonPath = path.resolve("./package.json");
-var modulesPath = path.resolve("./node_modules");
-var lockedVersionPath = path.resolve("./package-lock.json");
+var commander_1 = __importDefault(require("commander"));
+//通过命令行获取项目根路径（默认为当前项目）
+commander_1.default.option('--path [path]', 'your project path.').parse(process.argv);
+var projectRootPath = "./";
+if (commander_1.default.path) {
+    projectRootPath = path.resolve(commander_1.default.path);
+}
+if (!fs.existsSync(projectRootPath)) {
+    console.log("\u001b[1;31m");
+    console.log("Project path\u3010" + projectRootPath + "\u3011does not exist!");
+    console.log("\x1b[0m");
+    process.exit(1);
+}
+var packageJsonPath = path.resolve(projectRootPath, "package.json");
+var modulesPath = path.resolve(projectRootPath, "node_modules");
+var lockedVersionPath = path.resolve(projectRootPath, "package-lock.json");
 var msgList = [];
 var getVersion = function (str) {
     if (!semver_1.default.valid(str)) {

@@ -1,11 +1,12 @@
 {
   "name": "x-package-version-strict-check",
-  "version": "1.6.1",
+  "version": "1.7.0",
   "description": "A tool to check package's version strictly in project.",
   "main": "./dist/index.js",
   "scripts": {
     "clear": "del-cli ./dist/**",
     "start": "ts-node index.ts",
+    "test": "ts-node index.ts --path ./",
     "dist": "npm run clear && tsc"
   },
   "bin": {
@@ -37,6 +38,7 @@
     "npm": ">=6.0.0"
   },
   "devDependencies": {
+    "@types/commander": "2.12.2",
     "@types/node": "10.12.18",
     "@types/semver": "6.0.0",
     "del-cli": "1.1.0",
@@ -44,6 +46,7 @@
     "typescript": "3.4.3"
   },
   "dependencies": {
+    "commander": "2.20.0",
     "semver": "6.0.0"
   }
 }
