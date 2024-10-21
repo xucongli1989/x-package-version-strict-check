@@ -15,7 +15,7 @@ var path = __importStar(require("path"));
 var semver_1 = __importDefault(require("semver"));
 var commander_1 = __importDefault(require("commander"));
 //通过命令行获取项目根路径（默认为当前项目）
-commander_1.default.option('--path [path]', 'your project path.').parse(process.argv);
+commander_1.default.option("--path [path]", "your project path.").parse(process.argv);
 var projectRootPath = "./";
 if (commander_1.default.path) {
     projectRootPath = path.resolve(commander_1.default.path);
@@ -73,7 +73,7 @@ var getJsonObjectFromFilePath = function (filePath) {
     }
     //检查dependencies与devDependencies是否有重复的节点
     Object.keys(packageJsonFileObj.dependencies).forEach(function (k) {
-        if (typeof (packageJsonFileObj.devDependencies[k]) != 'undefined') {
+        if (typeof packageJsonFileObj.devDependencies[k] != "undefined") {
             msgList.push("Module [" + k + "] exists in both dependencies and devDependencies,please remove one of it!");
         }
     });
@@ -91,11 +91,18 @@ var getJsonObjectFromFilePath = function (filePath) {
                 return;
             }
             //检查package.json中的依赖包是否与package-lock.json一致
-            if (!lockedFileObj.dependencies || !lockedFileObj.dependencies[k]) {
+            var lockedItemInfo = null;
+            if (lockedFileObj.dependencies) {
+                lockedItemInfo = lockedFileObj.dependencies[k];
+            }
+            else if (lockedFileObj.packages) {
+                lockedItemInfo = lockedFileObj.packages["node_modules/" + k];
+            }
+            if (!lockedItemInfo) {
                 msgList.push("Module [" + k + "] is not in package-lock.json,please try run npm i !");
                 return;
             }
-            var lockedVer = getVersion(lockedFileObj.dependencies[k].version);
+            var lockedVer = getVersion(lockedItemInfo.version);
             if (lockedVer !== verInPackageJson) {
                 msgList.push("Module [" + k + "]: package.json's version(" + verInPackageJson + ") is different with package-lock.json version(" + lockedVer + "),please check it!");
                 return;

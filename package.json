@@ -7,7 +7,9 @@
     "clear": "del-cli ./dist/**",
     "start": "ts-node index.ts",
     "test": "ts-node index.ts --path ./",
-    "dist": "npm run clear && tsc"
+    "dist": "npm run clear && tsc",
+    "release": "standard-version && git push && git push --tags",
+    "ct": "git add -A && git-cz -a"
   },
   "bin": {
     "x-package-version-strict-check": "./dist/cmd.js"
@@ -43,7 +45,9 @@
     "@types/semver": "6.0.0",
     "del-cli": "1.1.0",
     "ts-node": "8.0.3",
-    "typescript": "3.4.3"
+    "typescript": "3.4.3",
+    "commitizen": "4.2.2",
+    "standard-version": "9.0.0"
   },
   "dependencies": {
     "commander": "2.20.0",
